@@ -60,7 +60,7 @@ router.post('/upload/multiple', uploading.array('images', 12), async (req, res) 
 });
 
 
-router.get('/images', async (req, res) {
+router.get('/images', async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         res.json(col.data);
