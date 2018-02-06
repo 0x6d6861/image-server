@@ -6,10 +6,10 @@ const fs = require('fs');
 const path = require('path');
 
 // setup
-const Util = require('./utils/util')
+const Util = require('./utils/util');
 const DB_NAME = Util.options.DB_NAME;
 const COLLECTION_NAME = Util.options.COLLECTION_NAME;
-const loadCollection = Util.loadCollection
+const loadCollection = Util.loadCollection;
 const db = Util.db;
 const UPLOAD_PATH = Util.options.UPLOAD_PATH;
 
@@ -42,8 +42,6 @@ router.post('/upload', uploading.single('pic'), async (req, res) => {
 
 })
 
-
-
 router.post('/upload/multiple', uploading.array('images', 12), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db)
@@ -62,7 +60,7 @@ router.post('/upload/multiple', uploading.array('images', 12), async (req, res) 
 });
 
 
-router.get('/images', async (req, res) => {
+router.get('/images', async (req, res) {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         res.json(col.data);

@@ -44,15 +44,6 @@ const cleanFolder = function (folderPath) {
 };
 
 
-const sendError = (error, code, message, req, res) => {
-	res.status(code)
-		.json({
-			'message': message,
-			'error': error.message
-		});
-}
-
-
 const Util = {
 	'loadCollection': loadCollection,
 	'imageFilter': imageFilter,
