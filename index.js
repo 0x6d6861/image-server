@@ -28,6 +28,10 @@ app.get('/upload', (req, res) => {
 	res.sendFile(__dirname + "/views/upload.html");
 })
 
+app.get('/test', function(req, res){
+  res.send('id: ' + req.query.id);
+});
+
 
 app.use("*",function(req,res){
   res.status(404)
