@@ -83,14 +83,18 @@ router.get('/images', async (req, res) => {
 })
 
 
-router.get('/images/option/:id', cache(100), async (req, res) => {
+router.get('/images/option/:id/:width/:height', cache(100), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         const result = col.get(req.params.id);
 
-        const width = +req.query.width;
-        const height = +req.query.height;
-        const crop = +req.query.crop;
+        // const width = +req.query.width;
+        // const height = +req.query.height;
+        // const crop = +req.query.crop;
+
+        const width = +req.params.width;
+        const height = +req.params.height;
+        const crop = +req.params.crop;
 
         if (!result) {
             res.status(404)
