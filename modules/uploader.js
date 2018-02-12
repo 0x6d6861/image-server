@@ -83,7 +83,7 @@ router.get('/images', async (req, res) => {
 })
 
 
-router.get('/images/option/:id/:width/:height?', cache(100), async (req, res) => {
+router.get('/images/:id/resize/:width/:height', cache(100), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         const result = col.get(req.params.id);
@@ -112,9 +112,14 @@ router.get('/images/option/:id/:width/:height?', cache(100), async (req, res) =>
         .resize(width,height, {
                  kernel: sharp.kernel.nearest
             })
-        .embed()
-        .crop(sharp.strategy.entropy)
-        .toFormat(sharp.format.webp)
+        .embed();
+        
+            if(crop){
+                image.crop(sharp.strategy.entropy);
+            }
+
+        
+        image.toFormat(sharp.format.webp)
         .toBuffer().then( data => {
             res.end(data, 'binary');
         }).catch( err => {
