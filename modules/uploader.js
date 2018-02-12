@@ -100,7 +100,7 @@ router.get('/images/option/:id', cache(100), async (req, res) => {
         res.setHeader('Content-Type', result.mimetype);
         
         var image = sharp(path.join(UPLOAD_PATH, result.filename))
-        .resize(10, {
+        .resize(100,100, {
                  kernel: sharp.kernel.nearest
             })
         .embed()
