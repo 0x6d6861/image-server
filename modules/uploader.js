@@ -8,6 +8,9 @@ const fs = require('fs');
 const path = require('path');
 
 const sharp = require('sharp');
+        sharp.cache();
+        sharp.simd();
+        sharp.concurrency();
 
 // setup
 const Util = require('./utils/util');
@@ -83,7 +86,7 @@ router.get('/images', async (req, res) => {
 })
 
 
-router.get('/images/:id/resize/:width*?/:height*?/:crop*?', cache(100), async (req, res) => {
+router.get('/images/:id/resize/:width/:height/:crop*?', cache(100), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         const result = col.get(req.params.id);
@@ -92,9 +95,13 @@ router.get('/images/:id/resize/:width*?/:height*?/:crop*?', cache(100), async (r
         // const height = +req.query.height;
         // const crop = +req.query.crop;
 
-        const width = +req.params.width;
-        const height = +req.params.height;
+        const width = +req.params.width || +req.query.width;
+        const height = +req.params.height || +req.query.width;
         const crop = +req.params.crop || +req.query.crop;
+        
+        const greyscale = +req.query.grey;
+        
+        
 
         if (!result) {
             res.status(404)
@@ -109,22 +116,25 @@ router.get('/images/:id/resize/:width*?/:height*?/:crop*?', cache(100), async (r
         res.setHeader('Content-Type', 'image/webp');
         
         var image = sharp(path.join(UPLOAD_PATH, result.filename))
-        .resize(width,height, {
-                 kernel: sharp.kernel.nearest
-            })
-        .embed();
-
-            if(crop){
-                image.crop(sharp.strategy.entropy);
-            }
-
-        
-        image.toFormat(sharp.format.webp)
-        .toBuffer().then( data => {
-            res.end(data, 'binary');
-        }).catch( err => {
-            console.log(err);
-        });
+            .resize(width,height, {
+                     kernel: sharp.kernel.nearest
+                })
+            .ignoreAspectRatio(true)
+            .max()
+            .greyscale(!!greyscale) // implicit casting int to boolean 
+            .embed();
+    
+                if(crop){
+                    image.crop(sharp.strategy.entropy);
+                }
+    
+            
+            image.toFormat(sharp.format.webp)
+            .toBuffer().then( data => {
+                res.end(data, 'binary');
+            }).catch( err => {
+                console.log(err);
+            });
   
 
     } catch (err) {
