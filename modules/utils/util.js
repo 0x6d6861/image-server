@@ -1,6 +1,7 @@
 const del = require('del');
 const multer = require('multer');
 const Loki = require('lokijs');
+const mcache = require('memory-cache');
 
 const UPLOAD_PATH = __dirname + '/../../images/uploads/';
 const DB_NAME = 'db.json';
@@ -37,6 +38,25 @@ const storage = multer.diskStorage({
   }
 });
 
+var cache = (duration) => {
+  return (req, res, next) => {
+    let key = '__express__' + req.originalUrl || req.url
+    let cachedBody = mcache.get(key)
+    if (cachedBody) {
+      res.send(cachedBody)
+      return
+    } else {
+      res.sendResponse = res.send
+      res.send = (body) => {
+        mcache.put(key, body, duration * 1000);
+        res.sendResponse(body)
+      }
+      next()
+    }
+  }
+}
+
+
 const cleanFolder = function (folderPath) {
     // delete files inside folder but not the folder itself
     del.sync([`${folderPath}/**`, `!${folderPath}`]);
@@ -49,6 +69,7 @@ const Util = {
 	'storage': storage,
 	'db': db,
 	'cleanFolder': cleanFolder,
+	'cache': cache,
 	'options': {
 		'UPLOAD_PATH': UPLOAD_PATH,
 		'DB_NAME': DB_NAME,

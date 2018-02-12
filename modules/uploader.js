@@ -2,8 +2,11 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 
+var mcache = require('memory-cache');
+
 const fs = require('fs');
 const path = require('path');
+
 
 // setup
 const Util = require('./utils/util');
@@ -12,6 +15,7 @@ const COLLECTION_NAME = Util.options.COLLECTION_NAME;
 const loadCollection = Util.loadCollection;
 const db = Util.db;
 const UPLOAD_PATH = Util.options.UPLOAD_PATH;
+const cache = Util.cache;
 
 
 const uploading = multer({
@@ -63,7 +67,11 @@ router.post('/upload/multiple', uploading.array('images', 12), async (req, res) 
 router.get('/images', async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
-        res.json(col.data);
+        const result = col.data.map(data => {
+        	data.link = `${req.protocol}://${req.headers.host}${req.originalUrl}/${data.$loki}`
+        	return data;
+        });
+        res.json(result);
     } catch (err) {
         res.status(400)
         	.json({
@@ -73,7 +81,7 @@ router.get('/images', async (req, res) => {
     }
 })
 
-router.get('/images/:id', async (req, res) => {
+router.get('/images/:id', cache(100), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         const result = col.get(req.params.id);
