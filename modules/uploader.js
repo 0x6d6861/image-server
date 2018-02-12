@@ -99,11 +99,18 @@ router.get('/images/option/:id', cache(100), async (req, res) => {
         
         res.setHeader('Content-Type', result.mimetype);
         
-        var image = sharp(path.join(UPLOAD_PATH, result.filename)).rotate(90).resize(10).toBuffer().then( data => {
+        var image = sharp(path.join(UPLOAD_PATH, result.filename))
+        .resize(10, {
+                 kernel: sharp.kernel.nearest
+            })
+        .embed()
+        .crop(sharp.strategy.entropy)
+        .toFormat(sharp.format.webp)
+        .toBuffer().then( data => {
             res.end(data, 'binary');
-        } ).catch( err => {
+        }).catch( err => {
             console.log(err);
-        } );
+        });
   
 
     } catch (err) {
