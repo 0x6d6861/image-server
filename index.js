@@ -4,8 +4,6 @@ const app = express();
 const api = express.Router();
 
 
-
-
 app.use(cors());
 app.use(express.static('images/uploads'));
 

@@ -97,7 +97,8 @@ router.get('/images/option/:id', cache(100), async (req, res) => {
         };
         
         
-        res.setHeader('Content-Type', result.mimetype);
+        // res.setHeader('Content-Type', result.mimetype);
+        res.setHeader('Content-Type', 'image/webp');
         
         var image = sharp(path.join(UPLOAD_PATH, result.filename))
         .resize(100,100, {
