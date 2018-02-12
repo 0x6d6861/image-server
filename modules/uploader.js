@@ -7,6 +7,7 @@ var mcache = require('memory-cache');
 const fs = require('fs');
 const path = require('path');
 
+const sharp = require('sharp');
 
 // setup
 const Util = require('./utils/util');
@@ -81,6 +82,41 @@ router.get('/images', async (req, res) => {
     }
 })
 
+
+router.get('/images/option/:id', cache(100), async (req, res) => {
+    try {
+        const col = await loadCollection(COLLECTION_NAME, db);
+        const result = col.get(req.params.id);
+
+        if (!result) {
+            res.status(404)
+            	.json({
+            		'message': 'No image found'
+            	});
+            return;
+        };
+        
+        
+        res.setHeader('Content-Type', result.mimetype);
+        
+        var image = sharp(path.join(UPLOAD_PATH, result.filename)).rotate(90).resize(10).toBuffer().then( data => {
+            res.end(data, 'binary');
+        } ).catch( err => {
+            console.log(err);
+        } );
+  
+
+    } catch (err) {
+    	res.setHeader('Content-Type', 'application/json');
+        res.status(400)
+        	.json({
+        		'message': 'Bad request',
+        		'error': err.message
+        	});
+    }
+})
+
+
 router.get('/images/:id', cache(100), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
@@ -96,6 +132,7 @@ router.get('/images/:id', cache(100), async (req, res) => {
         // console.log(result);
         res.setHeader('Content-Type', result.mimetype);
         fs.createReadStream(path.join(UPLOAD_PATH, result.filename)).pipe(res);
+  
 
     } catch (err) {
     	res.setHeader('Content-Type', 'application/json');
