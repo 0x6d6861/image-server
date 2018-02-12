@@ -86,6 +86,9 @@ router.get('/images', async (req, res) => {
 })
 
 
+// IMPORTANT: https://image-server-heriagape.c9users.io/api/images/5/resize/100/100/?crop=1&grey=1
+// IMPORTANT: https://image-server-heriagape.c9users.io/api/images/5/resize/100/100/1/?grey=1
+
 router.get('/images/:id/resize/:width/:height/:crop*?', cache(100), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
