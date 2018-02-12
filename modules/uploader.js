@@ -88,6 +88,10 @@ router.get('/images/option/:id', cache(100), async (req, res) => {
         const col = await loadCollection(COLLECTION_NAME, db);
         const result = col.get(req.params.id);
 
+        const width = req.query.width;
+        const height = req.query.height;
+        const crop = req.query.crop;
+
         if (!result) {
             res.status(404)
             	.json({
@@ -101,7 +105,7 @@ router.get('/images/option/:id', cache(100), async (req, res) => {
         res.setHeader('Content-Type', 'image/webp');
         
         var image = sharp(path.join(UPLOAD_PATH, result.filename))
-        .resize(100,100, {
+        .resize(width,height, {
                  kernel: sharp.kernel.nearest
             })
         .embed()
