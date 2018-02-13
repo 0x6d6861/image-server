@@ -1,3 +1,21 @@
+var cluster = require('cluster');
+
+if (cluster.isMaster) {
+
+    var cpuCount = require('os').cpus().length;
+    for (var i = 0; i < cpuCount; i += 1) {
+        cluster.fork();
+	}
+
+	cluster.on('exit', function (worker) {
+
+		console.log('Worker %d died :(', worker.id);
+		cluster.fork();
+	
+	});
+	
+} else {
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -39,4 +57,6 @@ app.use("*",function(req,res){
    });
 });
 
-app.listen(process.env.PORT || 3000, () => console.log('Example app listening on port 3000!'))
+app.listen(process.env.PORT || 3000, () => console.log('Worker %d running!', cluster.worker.id));
+
+}

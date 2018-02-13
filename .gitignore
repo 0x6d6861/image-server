@@ -28,3 +28,6 @@ benchmarks/graphs
 
 images/uploads/*
 images/uploads/db.json
+
+.idea
+

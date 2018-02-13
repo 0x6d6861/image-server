@@ -16,6 +16,7 @@
   "author": "Heri Agape",
   "license": "ISC",
   "dependencies": {
+    "cluster": "^0.7.7",
     "cors": "^2.8.4",
     "del": "^3.0.0",
     "express": "^4.16.2",
