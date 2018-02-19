@@ -7,11 +7,12 @@
     
 </head>
 <body>
-	
+	<form name="uploadForm" id="uploadForm" action="/api/upload" enctype="multipart/form-data" class="form-horizontal" method="post">
+</form>
 	<div class="container text-center">
-		<h2>PHP - File upload progress bar and percentage with jquery</h2>
+		<h2>Image Server Uploader</h2>
 		<div style="border: 1px solid #a1a1a1;text-align: center;width: 500px;padding:30px;margin:0px auto">
-			<form action="/api/upload" enctype="multipart/form-data" class="form-horizontal" method="post">
+			<div class="form-horizontal">
 
 
 				<div class="preview"></div>
@@ -23,11 +24,11 @@
 				</div>
 
 
-				<input type="file" name="pic" class="form-control" />
-				<button class="btn btn-primary upload-image">Upload Image</button>
+				<input form="uploadForm" type="file" name="pic" class="form-control" />
+				<button form="uploadForm" class="btn btn-primary upload-image">Upload Image</button>
 
 				
-			</form>
+			</div>
 			<div id="results"></div>
 		</div>
 	</div>
@@ -42,7 +43,7 @@
 
 			e.preventDefault();
 
-            	$(".form-horizontal").ajaxForm(
+            	$("#uploadForm").ajaxForm(
 		{
 		  target: '.preview',
 		  beforeSend: function() {
@@ -54,10 +55,10 @@
 		        progressbar.width(percentComplete + '%');
 		        progressbar.text(percentComplete + '%');
 		     },
-		complete: function(xhr) {
+			complete: function(xhr) {
 		      if(xhr.responseText)
 		      {
-			document.getElementById("results").innerHTML=xhr.responseText;
+				document.getElementById("results").innerHTML=xhr.responseText;
 		      }
 		    }
 				})
