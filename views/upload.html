@@ -4,33 +4,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" >
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
     <script src="http://malsup.github.com/jquery.form.js"></script> 
-    <script> 
-        $(document).ready(function() { 
-
-
-         var progressbar     = $('.progress-bar');
-
-
-            $(".upload-image").click(function(){
-            	$(".form-horizontal").ajaxForm(
-		{
-		  target: '.preview',
-		  beforeSend: function() {
-			$(".progress").css("display","block");
-			progressbar.width('0%');
-			progressbar.text('0%');
-                    },
-		    uploadProgress: function (event, position, total, percentComplete) {
-		        progressbar.width(percentComplete + '%');
-		        progressbar.text(percentComplete + '%');
-		     },
-		})
-		.submit();
-            });
-
-
-        }); 
-    </script>
+    
 </head>
 <body>
 	<nav class="navbar navbar-default">
@@ -62,5 +36,35 @@
 			</form>
 		</div>
 	</div>
+<script> 
+        $(document).ready(function() { 
+
+
+         var progressbar   = $('.progress-bar');
+
+
+            $(".upload-image").click(function(e){
+
+			e.preventDefault();
+
+            	$(".form-horizontal").ajaxForm(
+		{
+		  target: '.preview',
+		  beforeSend: function() {
+			$(".progress").css("display","block");
+			progressbar.width('0%');
+			progressbar.text('0%');
+                    },
+		    uploadProgress: function (event, position, total, percentComplete) {
+		        progressbar.width(percentComplete + '%');
+		        progressbar.text(percentComplete + '%');
+		     },
+		})
+		.submit();
+            });
+
+
+        }); 
+    </script>
 </body>
 </html>
