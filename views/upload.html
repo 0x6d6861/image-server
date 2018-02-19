@@ -7,13 +7,7 @@
     
 </head>
 <body>
-	<nav class="navbar navbar-default">
-		<div class="container-fluid text-center">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">ItSolutionstuff.com</a>
-			</div>
-		</div>
-	</nav>
+	
 	<div class="container text-center">
 		<h2>PHP - File upload progress bar and percentage with jquery</h2>
 		<div style="border: 1px solid #a1a1a1;text-align: center;width: 500px;padding:30px;margin:0px auto">
@@ -34,6 +28,7 @@
 
 				
 			</form>
+			<div id="results"></div>
 		</div>
 	</div>
 <script> 
@@ -59,7 +54,13 @@
 		        progressbar.width(percentComplete + '%');
 		        progressbar.text(percentComplete + '%');
 		     },
-		})
+		complete: function(xhr) {
+		      if(xhr.responseText)
+		      {
+			document.getElementById("results").innerHTML=xhr.responseText;
+		      }
+		    }
+				})
 		.submit();
             });
 
