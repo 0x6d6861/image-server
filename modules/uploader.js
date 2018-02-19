@@ -36,8 +36,8 @@ router.post('/upload', uploading.single('pic'), async (req, res) => {
         	// console.log( typeof req );
         	const data = col.insert(req.file);
         	db.saveDatabase();
-
-        	res.json({ id: data.$loki, fileName: data.filename, originalName: data.originalname });
+            var link = `${req.protocol}://${req.headers.host}/api/images/${data.$loki}`
+        	res.json({ id: data.$loki, fileName: data.filename, originalName: data.originalname, link: link });
     	
     	} catch (err) {
     		// console.log(err);
