@@ -36,7 +36,7 @@ router.post('/upload', uploading.single('pic'), async (req, res) => {
         	// console.log( typeof req );
         	const data = col.insert(req.file);
         	db.saveDatabase();
-            var link = `${req.protocol}://${req.headers.host}/api/images/${data.$loki}`
+            var link = `${req.protocol}://${req.headers.host}/api/images/${data.$loki}/image.png`
         	res.json({ id: data.$loki, fileName: data.filename, originalName: data.originalname, link: link });
     	
     	} catch (err) {
@@ -86,10 +86,10 @@ router.get('/images', async (req, res) => {
 })
 
 
-// IMPORTANT: https://image-server-heriagape.c9users.io/api/images/5/resize/100/100/?crop=1&grey=1
-// IMPORTANT: https://image-server-heriagape.c9users.io/api/images/5/resize/100/100/1/?grey=1
+// IMPORTANT: https://image-server-heriagape.c9users.io/api/images/5/resize/100/100/?crop=1&grey=1/image.png
+// IMPORTANT: https://image-server-heriagape.c9users.io/api/images/5/resize/100/100/1/?grey=1/image.png
 
-router.get('/images/:id/resize/:width/:height/:crop*?', cache(100), async (req, res) => {
+router.get('/images/:id/resize/:width/:height/:crop*?/image.png', cache(100), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         const result = col.get(req.params.id);
@@ -151,7 +151,7 @@ router.get('/images/:id/resize/:width/:height/:crop*?', cache(100), async (req, 
 })
 
 
-router.get('/images/:id', cache(100), async (req, res) => {
+router.get('/images/:id/image.png', cache(100), async (req, res) => {
     try {
         const col = await loadCollection(COLLECTION_NAME, db);
         const result = col.get(req.params.id);

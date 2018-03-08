@@ -21,7 +21,7 @@ const loadCollection = function (colName, db){
 
 const imageFilter = function (req, file, cb, res) {
     // accept image only
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {    	
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp)$/)) {    	
     	return cb(null, false);
         // return cb(new Error('Only image files are allowed!'), false);
     }
